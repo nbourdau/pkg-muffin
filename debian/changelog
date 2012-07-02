@@ -1,0 +1,23 @@
+muffin (1.0.3) maya; urgency=low
+
+  * 1.0.3
+
+ -- Clement Lefebvre <root@linuxmint.com>  Thu, 26 Apr 2012 11:41:00 +0000
+
+muffin (1.0.2) lisa; urgency=low
+
+  * 1.0.2
+
+ -- Clement Lefebvre <root@linuxmint.com>  Tue, 13 Mar 2012 15:55:26 +0000
+
+muffin (1.0.1) lisa; urgency=low
+
+  * 1.0.1
+
+ -- Clement Lefebvre <root@linuxmint.com>  Fri, 17 Feb 2012 10:57:41 +0000
+
+muffin (1.0.0) lisa; urgency=low
+
+  * Muffin, based on Mutter 3.2.1(-0ubuntu2)
+
+ -- Clement Lefebvre <root@linuxmint.com>  Wed, 11 Jan 2012 18:04:13 +0000
