@@ -1,7 +1,14 @@
 #!/usr/bin/make -f
 
+export DEB_LDFLAGS_MAINT_APPEND=-Wl,--as-needed
+
+
 %:
 	dh  $@ --with autoreconf
+
+
+override_dh_autoreconf:
+	dh_autoreconf --as-needed
 
 override_dh_shlibdeps:
 	dh_shlibdeps
