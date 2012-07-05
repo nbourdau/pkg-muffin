@@ -35,6 +35,7 @@ Homepage: https://github.com/linuxmint/muffin
 
 Package: muffin
 Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          muffin-common (= ${source:Version}),
@@ -58,6 +59,7 @@ Description: lightweight GTK+ window manager
 
 Package: libmuffin0
 Section: libs
+Multi-Arch: same
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends},
@@ -77,6 +79,7 @@ Description: window manager library from the Muffin window manager
 
 Package: muffin-common
 Section: misc
+Multi-Arch: foreign
 Architecture: all
 Depends: ${misc:Depends}
 Description: shared files for the Muffin window manager
@@ -92,6 +95,7 @@ Description: shared files for the Muffin window manager
 
 Package: libmuffin-dev
 Section: libdevel
+Multi-Arch: same
 Architecture: any
 Depends: ${misc:Depends},
          libmuffin0 (= ${binary:Version}),
@@ -111,6 +115,7 @@ Description: Development files for the Muffin window manager
 
 Package: gir1.2-muffin-3.0
 Section: introspection
+Multi-Arch: same
 Architecture: any
 Depends: ${gir:Depends},
          ${misc:Depends}
