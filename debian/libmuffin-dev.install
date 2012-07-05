@@ -2,4 +2,4 @@ usr/include
 usr/lib/*/lib*.a
 usr/lib/*/lib*.so
 usr/lib/*/pkgconfig/*.pc
-usr/lib/*/muffin/Meta-*.gir usr/lib/muffin/
+usr/lib/*/muffin/Meta-*.gir
