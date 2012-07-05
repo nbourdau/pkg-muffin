@@ -28,8 +28,7 @@ Build-Depends: debhelper (>= 9),
                libsm-dev,
                libice-dev,
                zenity,
-               gnome-doc-utils (>= 0.8),
-               gnome-pkg-tools (>= 0.10)
+               gnome-doc-utils (>= 0.8)
 Standards-Version: 3.9.3
 Homepage: https://github.com/linuxmint/muffin
 
@@ -44,7 +43,6 @@ Depends: ${shlibs:Depends},
 Provides: x-window-manager
 Recommends: gnome-session | x-session-manager
 Suggests: gnome-control-center (>= 1:2.5.4),
-          gnome-themes,
           xdg-user-dirs
 Description: lightweight GTK+ window manager
  Muffin is a small window manager, using GTK+ and Clutter to do
@@ -75,7 +73,7 @@ Description: window manager library from the Muffin window manager
  Cheerios."
  .
  This package contains the window manager shared library, used by muffin
- itself, and gnome-shell.
+ itself, and Cinnamon.
 
 Package: muffin-common
 Section: misc
