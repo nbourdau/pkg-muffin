@@ -128,3 +128,20 @@ Description: GObject introspection data for Muffin
  .
  This package contains the GObject introspection data which may be
  used to generate dynamic bindings.
+
+Package: muffin-dbg
+Section: debug
+Multi-Arch: same
+Architecture: any
+Depends: libmuffin0 (= ${binary:Version}),
+         muffin (= ${binary:Version})
+Description: Debugging symbols files for the Muffin window manager
+ Muffin is a small window manager, using GTK+ and Clutter to do
+ everything.
+ .
+ Muffin is the clutter-based evolution of Metacity, which, as the
+ author says, is a "Boring window manager for the adult in you. Many
+ window managers are like Marshmallow Froot Loops; Metacity is like
+ Cheerios."
+ .
+ This package contains the debugging symbols.
