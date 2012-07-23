@@ -127,9 +127,11 @@ Description: GObject introspection data for Muffin
 
 Package: muffin-dbg
 Section: debug
+Priority: extra
 Architecture: any
 Depends: libmuffin0 (= ${binary:Version}),
-         muffin (= ${binary:Version})
+         muffin (= ${binary:Version}),
+         ${misc:Depends}
 Description: Debugging symbols files for the Muffin window manager
  Muffin is a small window manager, using GTK+ and Clutter to do
  everything.
