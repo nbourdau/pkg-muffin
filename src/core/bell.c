@@ -23,7 +23,8 @@
  */
 
 /**
- * \file bell.c Ring the bell or flash the screen
+ * SECTION:Bell
+ * @short_description: Ring the bell or flash the screen
  *
  * Sometimes, X programs "ring the bell", whatever that means. Muffin lets
  * the user configure the bell to be audible or visible (aka visual), and
@@ -56,7 +57,7 @@
 #include <canberra-gtk.h>
 #endif
 
-/**
+/*
  * Flashes one entire screen.  This is done by making a window the size of the
  * whole screen (or reusing the old one, if it's still around), mapping it,
  * painting it white and then black, and then unmapping it. We set saveunder so
@@ -130,13 +131,13 @@ bell_flash_screen (MetaDisplay *display,
       XFreeGC (display->xdisplay, gc);
     }
 
-  if (meta_prefs_get_focus_mode () != META_FOCUS_MODE_CLICK &&
+  if (meta_prefs_get_focus_mode () != G_DESKTOP_FOCUS_MODE_CLICK &&
       !display->mouse_mode)
     meta_display_increment_focus_sentinel (display);
   XFlush (display->xdisplay);
 }
 
-/**
+/*
  * Flashes one screen, or all screens, in response to a bell event.
  * If the event is on a particular window, flash the screen that
  * window is on. Otherwise, flash every screen on this display.
@@ -181,7 +182,7 @@ bell_flash_fullscreen (MetaDisplay *display,
     }
 }
 
-/**
+/*
  * Makes a frame be not flashed; this is the timeout half of
  * bell_flash_window_frame(). This is done simply by clearing the
  * flash flag and queuing a redraw of the frame.
@@ -204,7 +205,7 @@ bell_unflash_frame (gpointer data)
   return FALSE;
 }
 
-/**
+/*
  * Makes a frame flash and then return to normal shortly afterwards.
  * This is done by setting a flag so that the theme
  * code will temporarily draw the frame as focussed if it's unfocussed and
@@ -230,7 +231,7 @@ bell_flash_window_frame (MetaWindow *window)
       bell_unflash_frame, window->frame, NULL);
 }
 
-/**
+/*
  * Flashes the frame of the focussed window. If there is no focussed window,
  * flashes the screen.
  *
@@ -260,7 +261,7 @@ bell_flash_frame (MetaDisplay *display,
     }
 }
 
-/**
+/*
  * Gives the user some kind of visual bell substitute, in response to a
  * bell event. What this is depends on the "visual bell type" pref.
  *
@@ -277,14 +278,11 @@ bell_visual_notify (MetaDisplay *display,
 {
   switch (meta_prefs_get_visual_bell_type ()) 
     {
-    case META_VISUAL_BELL_FULLSCREEN_FLASH:
+    case G_DESKTOP_VISUAL_BELL_FULLSCREEN_FLASH:
       bell_flash_fullscreen (display, xkb_ev);
       break;
-    case META_VISUAL_BELL_FRAME_FLASH:
+    case G_DESKTOP_VISUAL_BELL_FRAME_FLASH:
       bell_flash_frame (display, xkb_ev); /* does nothing yet */
-      break;
-    case META_VISUAL_BELL_INVALID:
-      /* do nothing */
       break;
     }
 }
@@ -294,7 +292,7 @@ meta_bell_notify (MetaDisplay *display,
 		  XkbAnyEvent *xkb_ev)
 {
   /* flash something */
-  if (meta_prefs_get_visual_bell ()) 
+  if (meta_prefs_get_visual_bell ())
     bell_visual_notify (display, xkb_ev);
 
 #ifdef HAVE_LIBCANBERRA
@@ -409,7 +407,7 @@ meta_bell_shutdown (MetaDisplay *display)
 #endif
 }
 
-/**
+/*
  * Deals with a frame being destroyed. This is important because if we're
  * using a visual bell, we might be flashing the edges of the frame, and
  * so we'd have a timeout function waiting ready to un-flash them. If the
