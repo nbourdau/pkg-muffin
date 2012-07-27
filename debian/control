@@ -55,7 +55,7 @@ Description: lightweight GTK+ window manager
  .
  This package contains the core binaries.
 
-Package: libmuffin0
+Package: libmuffin-1.0.6
 Section: libs
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends}
@@ -93,7 +93,7 @@ Package: libmuffin-dev
 Section: libdevel
 Architecture: any
 Depends: ${misc:Depends},
-         libmuffin0 (= ${binary:Version}),
+         libmuffin-1.0.6 (= ${binary:Version}),
          gir1.2-muffin-3.0 (= ${binary:Version}),
          libclutter-1.0-dev (>= 1.0.0),
          libgtk-3-dev (>= 3.0.0)
@@ -129,7 +129,7 @@ Package: muffin-dbg
 Section: debug
 Priority: extra
 Architecture: any
-Depends: libmuffin0 (= ${binary:Version}),
+Depends: libmuffin-1.0.6 (= ${binary:Version}),
          muffin (= ${binary:Version}),
          ${misc:Depends}
 Description: Debugging symbols files for the Muffin window manager

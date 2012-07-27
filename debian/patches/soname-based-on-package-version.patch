@@ -1,0 +1,27 @@
+From ba0d29061de5d08b6945609a526d8512249a493b Mon Sep 17 00:00:00 2001
+From: Nicolas Bourdaud <nicolas.bourdaud@gmail.com>
+Date: Fri, 27 Jul 2012 21:13:54 +0200
+Description: append version number to form libmuffin SONAME
+ This is necessary since upstream breaks ABI at each new release.
+Origin: vendor, debian
+Author: Nicolas Bourdaud <nicolas.bourdaud@gmail.com>
+Forwarded: no
+Last-Update: 2012-07-27
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 5d2474a..a9de32d 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -151,7 +151,8 @@ libmuffin_la_SOURCES =				\
+ 	ui/preview-widget.c			\
+ 	$(muffin_built_sources)
+ 
+-libmuffin_la_LDFLAGS = -no-undefined
++MUFFIN_RELEASE=$(MUFFIN_MAJOR_VERSION).$(MUFFIN_MINOR_VERSION).$(MUFFIN_MICRO_VERSION)
++libmuffin_la_LDFLAGS = -no-undefined -release $(MUFFIN_RELEASE)
+ libmuffin_la_LIBADD  = $(MUFFIN_LIBS) -lclutter-glx-1.0
+ 
+ # Headers installed for plugins; introspected information will
+-- 
+1.7.10.4
+
