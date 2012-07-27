@@ -232,15 +232,13 @@ meta_window_actor_class_init (MetaWindowActorClass *klass)
     g_signal_new ("position-changed",
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
-                  0, NULL, NULL,
-                  g_cclosure_marshal_VOID__VOID,
+                  0, NULL, NULL, NULL,
                   G_TYPE_NONE, 0);
   signals[SIZE_CHANGED] =
     g_signal_new ("size-changed",
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
-                  0, NULL, NULL,
-                  g_cclosure_marshal_VOID__VOID,
+                  0, NULL, NULL, NULL,
                   G_TYPE_NONE, 0);
 }
 
@@ -643,6 +641,9 @@ meta_window_actor_paint (ClutterActor *actor)
   MetaWindowActorPrivate *priv = self->priv;
   gboolean appears_focused = meta_window_appears_focused (priv->window);
   MetaShadow *shadow = appears_focused ? priv->focused_shadow : priv->unfocused_shadow;
+  if (g_getenv ("MUFFIN_NO_SHADOWS")) {
+      shadow = NULL;
+  }
 
   if (shadow != NULL)
     {
@@ -742,6 +743,13 @@ meta_window_actor_has_shadow (MetaWindowActor *self)
     return FALSE;
 
   /*
+   * If we have two snap-tiled windows, we don't want the shadow to obstruct
+   * the other window.
+   */
+  if (meta_window_get_tile_match (priv->window))
+    return FALSE;
+
+  /*
    * Always put a shadow around windows with a frame - This should override
    * the restriction about not putting a shadow around ARGB windows.
    */
@@ -828,9 +836,9 @@ meta_window_actor_get_x_window (MetaWindowActor *self)
 /**
  * meta_window_actor_get_meta_window:
  *
- * Gets the MetaWindow object that the the MetaWindowActor is displaying
+ * Gets the #MetaWindow object that the the #MetaWindowActor is displaying
  *
- * Return value: (transfer none): the displayed MetaWindow
+ * Return value: (transfer none): the displayed #MetaWindow
  */
 MetaWindow *
 meta_window_actor_get_meta_window (MetaWindowActor *self)
@@ -843,7 +851,7 @@ meta_window_actor_get_meta_window (MetaWindowActor *self)
  *
  * Gets the ClutterActor that is used to display the contents of the window
  *
- * Return value: (transfer none): the ClutterActor for the contents
+ * Return value: (transfer none): the #ClutterActor for the contents
  */
 ClutterActor *
 meta_window_actor_get_texture (MetaWindowActor *self)
@@ -1500,6 +1508,9 @@ meta_window_actor_new (MetaWindow *window)
   MetaWindowActorPrivate *priv;
   MetaFrame		 *frame;
   Window		  top_window;
+  MetaRectangle rectWorkArea[1];
+  MetaRectangle *rectWindow;
+  int tooltipMoved = FALSE;
 
   frame = meta_window_get_frame (window);
   if (frame)
@@ -1532,6 +1543,30 @@ meta_window_actor_new (MetaWindow *window)
   if (window->type == META_WINDOW_POPUP_MENU){
     clutter_container_add_actor (CLUTTER_CONTAINER (info->top_window_group),
 			       CLUTTER_ACTOR (self));
+  }
+  else if (window->type == META_WINDOW_TOOLTIP) {
+    meta_window_get_work_area_all_monitors(window, rectWorkArea);
+    rectWindow = meta_window_get_rect(window);
+    // move tooltip out of top panel if necessary
+    if (rectWindow->y < rectWorkArea->y) {
+      meta_window_move(window, FALSE, rectWindow->x, rectWorkArea->y);
+      tooltipMoved = TRUE;
+    }
+    rectWindow = meta_window_get_rect(window);
+    // move tooltip out of bottom panel if necessary
+    if ((rectWindow->y + rectWindow->height) > (rectWorkArea->y  + rectWorkArea->height)) {
+      meta_window_move(window, FALSE, rectWindow->x, rectWorkArea->y + rectWorkArea->height - rectWindow->height);
+      tooltipMoved = TRUE;
+    }
+    
+    if (tooltipMoved) {
+      clutter_container_add_actor (CLUTTER_CONTAINER (info->window_group),
+			       CLUTTER_ACTOR (self));
+    }
+    else {
+      clutter_container_add_actor (CLUTTER_CONTAINER (info->top_window_group),
+			       CLUTTER_ACTOR (self));
+    }
   }else{
     clutter_container_add_actor (CLUTTER_CONTAINER (info->window_group),
 			       CLUTTER_ACTOR (self));
@@ -1616,24 +1651,16 @@ meta_window_actor_update_bounding_region_and_borders (MetaWindowActor *self,
                                                       int              height)
 {
   MetaWindowActorPrivate *priv = self->priv;
-  MetaFrame *frame;
   MetaFrameBorders borders;
   cairo_rectangle_int_t bounding_rectangle;
 
-  bounding_rectangle.x = 0;
-  bounding_rectangle.y = 0;
+  meta_frame_calc_borders (priv->window->frame, &borders);
 
-  frame = priv->window->frame;
-  if (frame != NULL)
-    {
-      meta_frame_calc_borders (frame, &borders);
+  bounding_rectangle.x = borders.invisible.left;
+  bounding_rectangle.y = borders.invisible.top;
 
-      bounding_rectangle.x = borders.invisible.left;
-      bounding_rectangle.y = borders.invisible.top;
-
-      width -= borders.invisible.left + borders.invisible.right;
-      height -= borders.invisible.top + borders.invisible.bottom;
-    }
+  width -= borders.invisible.left + borders.invisible.right;
+  height -= borders.invisible.top + borders.invisible.bottom;
 
   bounding_rectangle.width = width;
   bounding_rectangle.height = height;
@@ -1756,22 +1783,9 @@ meta_window_actor_set_visible_region (MetaWindowActor *self,
                                       cairo_region_t  *visible_region)
 {
   MetaWindowActorPrivate *priv = self->priv;
-  cairo_region_t *texture_clip_region = NULL;
 
-  /* Get the area of the window texture that would be drawn if
-   * we weren't obscured at all
-   */
-  texture_clip_region = meta_shaped_texture_get_visible_pixels_region (META_SHAPED_TEXTURE (priv->actor));
-  texture_clip_region = cairo_region_copy (texture_clip_region);
-
-  /* Then intersect that with the visible region to get the region
-   * that we actually need to redraw.
-   */
-  cairo_region_intersect (texture_clip_region, visible_region);
-
-  /* Assumes ownership */
   meta_shaped_texture_set_clip_region (META_SHAPED_TEXTURE (priv->actor),
-                                       texture_clip_region);
+                                       visible_region);
 }
 
 /**
@@ -1811,7 +1825,7 @@ meta_window_actor_set_visible_region_beneath (MetaWindowActor *self,
  * @self: a #MetaWindowActor
  *
  * Unsets the regions set by meta_window_actor_reset_visible_region() and
- *meta_window_actor_reset_visible_region_beneath()
+ * meta_window_actor_reset_visible_region_beneath()
  */
 void
 meta_window_actor_reset_visible_regions (MetaWindowActor *self)
@@ -1912,6 +1926,10 @@ check_needs_pixmap (MetaWindowActor *self)
 static void
 check_needs_shadow (MetaWindowActor *self)
 {
+  if (g_getenv ("MUFFIN_NO_SHADOWS")) {
+      return;
+  }
+
   MetaWindowActorPrivate *priv = self->priv;
   MetaShadow *old_shadow = NULL;
   MetaShadow **shadow_location;
@@ -2176,10 +2194,7 @@ check_needs_reshape (MetaWindowActor *self)
   meta_shaped_texture_set_shape_region (META_SHAPED_TEXTURE (priv->actor), NULL);
   meta_window_actor_clear_shape_region (self);
 
-  if (priv->window->frame)
-    meta_frame_calc_borders (priv->window->frame, &borders);
-  else
-    meta_frame_borders_clear (&borders);
+  meta_frame_calc_borders (priv->window->frame, &borders);
 
   region = meta_window_get_frame_bounds (priv->window);
   if (region != NULL)

@@ -25,7 +25,8 @@
  */
 
 /**
- * \file display.c Handles operations on an X display.
+ * SECTION:MetaDisplay
+ * @short_description: Handles operations on an X display.
  *
  * The display is represented as a MetaDisplay struct.
  */
@@ -51,6 +52,8 @@
 #include <meta/compositor.h>
 #include <X11/Xatom.h>
 #include <X11/cursorfont.h>
+#include "muffin-enum-types.h"
+
 #ifdef HAVE_SOLARIS_XINERAMA
 #include <X11/extensions/xinerama.h>
 #endif
@@ -84,7 +87,7 @@
          g == META_GRAB_OP_KEYBOARD_ESCAPING_DOCK   ||  \
          g == META_GRAB_OP_KEYBOARD_ESCAPING_GROUP)
 
-/**
+/*
  * \defgroup pings Pings
  *
  * Sometimes we want to see whether a window is responding,
@@ -99,7 +102,7 @@
  * that we're never going to do so and simplify it a bit.
  */
 
-/**
+/*
  * Describes a ping on a window. When we send a ping to a window, we build
  * one of these structs, and it eventually gets passed to the timeout function
  * or to the function which handles the response from the window. If the window
@@ -135,6 +138,8 @@ enum
   WINDOW_CREATED,
   WINDOW_DEMANDS_ATTENTION,
   WINDOW_MARKED_URGENT,
+  GRAB_OP_BEGIN,
+  GRAB_OP_END,
   LAST_SIGNAL
 };
 
@@ -146,7 +151,7 @@ enum {
 
 static guint display_signals [LAST_SIGNAL] = { 0 };
 
-/**
+/*
  * The display we're managing.  This is a singleton object.  (Historically,
  * this was a list of displays, but there was never any way to add more
  * than one element to it.)  The goofy name is because we don't want it
@@ -230,8 +235,7 @@ meta_display_class_init (MetaDisplayClass *klass)
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
                   0,
-                  NULL, NULL,
-                  g_cclosure_marshal_VOID__VOID,
+                  NULL, NULL, NULL,
                   G_TYPE_NONE, 0);
 
   display_signals[WINDOW_CREATED] =
@@ -239,8 +243,7 @@ meta_display_class_init (MetaDisplayClass *klass)
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
                   0,
-                  NULL, NULL,
-                  g_cclosure_marshal_VOID__OBJECT,
+                  NULL, NULL, NULL,
                   G_TYPE_NONE, 1, META_TYPE_WINDOW);
 
   display_signals[WINDOW_DEMANDS_ATTENTION] =
@@ -248,8 +251,7 @@ meta_display_class_init (MetaDisplayClass *klass)
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
                   0,
-                  NULL, NULL,
-                  g_cclosure_marshal_VOID__OBJECT,
+                  NULL, NULL, NULL,
                   G_TYPE_NONE, 1, META_TYPE_WINDOW);
 
   display_signals[WINDOW_MARKED_URGENT] =
@@ -257,10 +259,31 @@ meta_display_class_init (MetaDisplayClass *klass)
                   G_TYPE_FROM_CLASS (klass),
                   G_SIGNAL_RUN_LAST,
                   0,
-                  NULL, NULL,
-                  g_cclosure_marshal_VOID__OBJECT,
+                  NULL, NULL, NULL,
                   G_TYPE_NONE, 1,
                   META_TYPE_WINDOW);
+
+  display_signals[GRAB_OP_BEGIN] =
+    g_signal_new ("grab-op-begin",
+                  G_TYPE_FROM_CLASS (klass),
+                  G_SIGNAL_RUN_LAST,
+                  0,
+                  NULL, NULL, NULL,
+                  G_TYPE_NONE, 3,
+                  META_TYPE_SCREEN,
+                  META_TYPE_WINDOW,
+                  META_TYPE_GRAB_OP);
+
+  display_signals[GRAB_OP_END] =
+    g_signal_new ("grab-op-end",
+                  G_TYPE_FROM_CLASS (klass),
+                  G_SIGNAL_RUN_LAST,
+                  0,
+                  NULL, NULL, NULL,
+                  G_TYPE_NONE, 3,
+                  META_TYPE_SCREEN,
+                  META_TYPE_WINDOW,
+                  META_TYPE_GRAB_OP);
 
   g_object_class_install_property (object_class,
                                    PROP_FOCUS_WINDOW,
@@ -272,7 +295,7 @@ meta_display_class_init (MetaDisplayClass *klass)
 }
 
 
-/**
+/*
  * Destructor for MetaPingData structs. Will destroy the
  * event source for the struct as well.
  *
@@ -288,7 +311,7 @@ ping_data_free (MetaPingData *ping_data)
   g_free (ping_data);
 }
 
-/**
+/*
  * Frees every pending ping structure for the given X window on the
  * given display. This means that we also destroy the timeouts.
  *
@@ -394,7 +417,7 @@ meta_display_init (MetaDisplay *disp)
    * but it doesn't really matter. */
 }
 
-/**
+/*
  * Opens a new display, sets it up, initialises all the X extensions
  * we will need, and adds it to the list of displays.
  *
@@ -1145,7 +1168,7 @@ meta_display_ungrab (MetaDisplay *display)
                 display->server_grab_count);
 }
 
-/**
+/*
  * Returns the singleton MetaDisplay if "xdisplay" matches the X display it's
  * managing; otherwise gives a warning and returns NULL.  When we were claiming
  * to be able to manage multiple displays, this was supposed to find the
@@ -1168,7 +1191,7 @@ meta_display_for_x_display (Display *xdisplay)
   return NULL;
 }
 
-/**
+/*
  * Accessor for the singleton MetaDisplay.
  *
  * \return  The only MetaDisplay there is.  This can be NULL, but only
@@ -1385,6 +1408,19 @@ meta_display_get_current_time_roundtrip (MetaDisplay *display)
 }
 
 /**
+ * meta_display_get_ignored_modifier_mask:
+ * @display: a #MetaDisplay
+ *
+ * Returns: a mask of modifiers that should be ignored
+ *          when matching keybindings to events
+ */
+unsigned int
+meta_display_get_ignored_modifier_mask (MetaDisplay *display)
+{
+  return display->ignored_modifier_mask;
+}
+
+/**
  * meta_display_add_ignored_crossing_serial:
  * @display: a #MetaDisplay
  * @serial: the serial to ignore
@@ -1565,7 +1601,7 @@ handle_net_restack_window (MetaDisplay* display,
 }
 #endif
 
-/**
+/*
  * This is the most important function in the whole program. It is the heart,
  * it is the nexus, it is the Grand Central Station of Muffin's world.
  * When we create a MetaDisplay, we ask GDK to pass *all* events for *all*
@@ -1921,7 +1957,7 @@ event_callback (XEvent   *event,
                * in application-based mode, and the different
                * app is not a dock or desktop, eat the focus click.
                */
-              if (meta_prefs_get_focus_mode () == META_FOCUS_MODE_CLICK &&
+              if (meta_prefs_get_focus_mode () == G_DESKTOP_FOCUS_MODE_CLICK &&
                   meta_prefs_get_application_based () &&
                   !window->has_focus &&
                   window->type != META_WINDOW_DOCK &&
@@ -2009,8 +2045,8 @@ event_callback (XEvent   *event,
         {
           switch (meta_prefs_get_focus_mode ())
             {
-            case META_FOCUS_MODE_SLOPPY:
-            case META_FOCUS_MODE_MOUSE:
+            case G_DESKTOP_FOCUS_MODE_SLOPPY:
+            case G_DESKTOP_FOCUS_MODE_MOUSE:
               display->mouse_mode = TRUE;
               if (window->type != META_WINDOW_DOCK &&
                   window->type != META_WINDOW_DESKTOP)
@@ -2048,7 +2084,7 @@ event_callback (XEvent   *event,
                * alternative mechanism works great.
                */
               if (window->type == META_WINDOW_DESKTOP &&
-                  meta_prefs_get_focus_mode() == META_FOCUS_MODE_MOUSE &&
+                  meta_prefs_get_focus_mode() == G_DESKTOP_FOCUS_MODE_MOUSE &&
                   display->expected_focus_window != NULL)
                 {
                   meta_topic (META_DEBUG_FOCUS,
@@ -2060,7 +2096,7 @@ event_callback (XEvent   *event,
                                                           event->xcrossing.time);
                 }
               break;
-            case META_FOCUS_MODE_CLICK:
+            case G_DESKTOP_FOCUS_MODE_CLICK:
               break;
             }
           
@@ -3706,6 +3742,9 @@ meta_display_begin_grab_op (MetaDisplay *display,
     {
       meta_window_refresh_resize_popup (display->grab_window);
     }
+
+  g_signal_emit (display, display_signals[GRAB_OP_BEGIN], 0,
+                 screen, display->grab_window, display->grab_op);
   
   return TRUE;
 }
@@ -3719,6 +3758,9 @@ meta_display_end_grab_op (MetaDisplay *display,
   
   if (display->grab_op == META_GRAB_OP_NONE)
     return;
+
+  g_signal_emit (display, display_signals[GRAB_OP_END], 0,
+                 display->grab_screen, display->grab_window, display->grab_op);
 
   if (display->grab_window != NULL)
     display->grab_window->shaken_loose = FALSE;
@@ -4003,7 +4045,7 @@ meta_display_grab_focus_window_button (MetaDisplay *display,
    * focus window may not be raised, and who wants to think about
    * mouse focus anyway.
    */
-  if (meta_prefs_get_focus_mode () != META_FOCUS_MODE_CLICK)
+  if (meta_prefs_get_focus_mode () != G_DESKTOP_FOCUS_MODE_CLICK)
     {
       meta_verbose (" (well, not grabbing since not in click to focus mode)\n");
       return;
@@ -4152,12 +4194,12 @@ meta_display_set_cursor_theme (const char *theme,
 #endif
 }
 
-/**
+/*
  * Stores whether syncing is currently enabled.
  */
 static gboolean is_syncing = FALSE;
 
-/**
+/*
  * Returns whether X synchronisation is currently enabled.
  *
  * \return true if we must wait for events whenever we send X requests;
@@ -4174,7 +4216,7 @@ meta_is_syncing (void)
   return is_syncing;
 }
 
-/**
+/*
  * A handy way to turn on synchronisation on or off for every display.
  *
  * \bug Of course there is only one display ever anyway, so this can
@@ -4191,13 +4233,13 @@ meta_set_syncing (gboolean setting)
     }
 }
 
-/**
+/*
  * How long, in milliseconds, we should wait after pinging a window
  * before deciding it's not going to get back to us.
  */
 #define PING_TIMEOUT_DELAY 5000
 
-/**
+/*
  * Does whatever it is we decided to do when a window didn't respond
  * to a ping. We also remove the ping from the display's list of
  * pending pings. This function is called by the event loop when the timeout
@@ -4236,7 +4278,7 @@ meta_display_ping_timeout (gpointer data)
   return FALSE;
 }
 
-/**
+/*
  * Sends a ping request to a window. The window must respond to
  * the request within a certain amount of time. If it does, we
  * will call one callback; if the time passes and we haven't had
@@ -4366,7 +4408,7 @@ process_request_frame_extents (MetaDisplay    *display,
   meta_XFree (hints);
 }
 
-/**
+/*
  * Process the pong (the response message) from the ping we sent
  * to the window. This involves removing the timeout, calling the
  * reply handler function, and freeing memory.
@@ -4422,7 +4464,7 @@ process_pong_message (MetaDisplay    *display,
     }
 }
 
-/**
+/*
  * Finds whether a window has any pings waiting on it.
  *
  * \param display The MetaDisplay of the window.
@@ -4464,7 +4506,8 @@ get_focussed_group (MetaDisplay *display)
 
 #define IN_TAB_CHAIN(w,t) (((t) == META_TAB_LIST_NORMAL && META_WINDOW_IN_NORMAL_TAB_CHAIN (w)) \
     || ((t) == META_TAB_LIST_DOCKS && META_WINDOW_IN_DOCK_TAB_CHAIN (w)) \
-    || ((t) == META_TAB_LIST_GROUP && META_WINDOW_IN_GROUP_TAB_CHAIN (w, get_focussed_group(w->display))))
+    || ((t) == META_TAB_LIST_GROUP && META_WINDOW_IN_GROUP_TAB_CHAIN (w, get_focussed_group(w->display))) \
+    || ((t) == META_TAB_LIST_NORMAL_ALL && META_WINDOW_IN_NORMAL_TAB_CHAIN_TYPE (w)))
 
 static MetaWindow*
 find_tab_forward (MetaDisplay   *display,
@@ -4612,12 +4655,13 @@ meta_display_get_tab_list (MetaDisplay   *display,
   tab_list = g_list_reverse (tab_list);
 
   {
-    GSList *tmp;
+    GSList *windows, *tmp;
     MetaWindow *l_window;
 
-    tmp = meta_display_list_windows (display, META_LIST_DEFAULT);
+    windows = meta_display_list_windows (display, META_LIST_DEFAULT);
 
     /* Go through all windows */
+    tmp = windows;
     while (tmp != NULL)
       {
         l_window=tmp->data;
@@ -4633,6 +4677,8 @@ meta_display_get_tab_list (MetaDisplay   *display,
 
         tmp = tmp->next;
       } /* End while tmp!=NULL */
+
+    g_slist_free (windows);
   }
   
   return tab_list;
@@ -5029,12 +5075,21 @@ meta_display_unmanage_windows_for_screen (MetaDisplay *display,
   winlist = meta_display_list_windows (display,
                                        META_LIST_INCLUDE_OVERRIDE_REDIRECT);
   winlist = g_slist_sort (winlist, meta_display_stack_cmp);
+  g_slist_foreach (winlist, (GFunc)g_object_ref, NULL);
 
   /* Unmanage all windows */
   tmp = winlist;
   while (tmp != NULL)
     {
-      meta_window_unmanage (tmp->data, timestamp);
+      MetaWindow *window = tmp->data;
+
+      /* Check if already unmanaged for safety - in particular, catch
+       * the case where unmanaging a parent window can cause attached
+       * dialogs to be (temporarily) unmanaged.
+       */
+      if (!window->unmanaging)
+        meta_window_unmanage (window, timestamp);
+      g_object_unref (window);
       
       tmp = tmp->next;
     }
