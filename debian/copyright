@@ -41,19 +41,24 @@ Copyright:  2001-2008, Havoc Pennington, Red Hat, Inc., and others
             2003,      Åsmund Skjæveland.
             2005-2006, Canonical Ltd. and Rosetta Contributors
             2004-2006, Adam Weinberger and the GNOME Foundation
-            2004,      Kakilik Project
-                       Croatiann team
+            2004,      Kakilik Project Croatiann team
             2007-2008, OpenedHand
             2008-2009, Intel Corporation
             2008,      Matthew Allum
-            2011-2012, Clement Lebvre
+            2012 Clement Lefebvre
+            2011 Florian Müllner
+            2011, 2012 Jasper St. Pierre
+            2012 Nelson Marques
+            2012 Owen W. Taylor
+            2011 Rui Matos
 License: GPL-2+
 
 Files: debian/*
 Copyright: 2012, Nicolas Bourdaud <nicolas.bourdaud@gmail.com>
-           2011-2012, Clement Lebvre
 	   2011-2012, Michael Biebl
            2011-2012, Sjoerd Simons
+           2012 Clement Lefebvre
+           2012 Gwendal Le Bihan
 License: GPL-2+
 
 
