@@ -47,14 +47,13 @@ Provides: x-window-manager
 Recommends: gnome-session | x-session-manager
 Suggests: gnome-control-center (>= 1:2.5.4),
           xdg-user-dirs
-Description: lightweight GTK+ window manager
- Muffin is a small window manager, using GTK+ and Clutter to do
- everything.
+Description: lightweight window and compositing manager
+ Muffin is a small window manager performing compositing as well based on
+ GTK+ and Clutter and used in desktop environment such as Cinnamon. 
  .
- Muffin is the clutter-based evolution of Metacity, which, as the
- author says, is a "Boring window manager for the adult in you. Many
- window managers are like Marshmallow Froot Loops; Metacity is like
- Cheerios."
+ It is fairly extensible by the mean of plugins, providing new or customized
+ visual effects as well as a flexibility in the behavior of the window
+ manager.
  .
  This package contains the core binaries.
 
@@ -65,14 +64,13 @@ Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          muffin-common (= ${source:Version})
-Description: window manager library from the Muffin window manager
- Muffin is a small window manager, using GTK+ and Clutter to do
- everything.
+Description: lightweight window and compositing manager (shared library)
+ Muffin is a small window manager performing compositing as well based on
+ GTK+ and Clutter and used in desktop environment such as Cinnamon. 
  .
- Muffin is the clutter-based evolution of Metacity, which, as the
- author says, is a "Boring window manager for the adult in you. Many
- window managers are like Marshmallow Froot Loops; Metacity is like
- Cheerios."
+ It is fairly extensible by the mean of plugins, providing new or customized
+ visual effects as well as a flexibility in the behavior of the window
+ manager.
  .
  This package contains the window manager shared library, used by muffin
  itself, and Cinnamon.
@@ -81,16 +79,15 @@ Package: muffin-common
 Section: misc
 Architecture: all
 Depends: ${misc:Depends}
-Description: shared files for the Muffin window manager
- Muffin is a small window manager, using GTK+ and Clutter to do
- everything.
+Description: lightweight window and compositing manager (data files)
+ Muffin is a small window manager performing compositing as well based on
+ GTK+ and Clutter and used in desktop environment such as Cinnamon. 
  .
- Muffin is the clutter-based evolution of Metacity, which, as the
- author says, is a "Boring window manager for the adult in you. Many
- window managers are like Marshmallow Froot Loops; Metacity is like
- Cheerios."
+ It is fairly extensible by the mean of plugins, providing new or customized
+ visual effects as well as a flexibility in the behavior of the window
+ manager.
  .
- This package contains the shared files.
+ This package contains the shared data files.
 
 Package: libmuffin-dev
 Section: libdevel
@@ -100,14 +97,13 @@ Depends: ${misc:Depends},
          gir1.2-muffin-3.0 (= ${binary:Version}),
          libclutter-1.0-dev (>= 1.0.0),
          libgtk-3-dev (>= 3.0.0)
-Description: Development files for the Muffin window manager
- Muffin is a small window manager, using GTK+ and Clutter to do
- everything.
+Description: lightweight window and compositing manager (development files)
+ Muffin is a small window manager performing compositing as well based on
+ GTK+ and Clutter and used in desktop environment such as Cinnamon. 
  .
- Muffin is the clutter-based evolution of Metacity, which, as the
- author says, is a "Boring window manager for the adult in you. Many
- window managers are like Marshmallow Froot Loops; Metacity is like
- Cheerios."
+ It is fairly extensible by the mean of plugins, providing new or customized
+ visual effects as well as a flexibility in the behavior of the window
+ manager.
  .
  This package contains the development files.
 
@@ -117,13 +113,12 @@ Architecture: any
 Depends: ${gir:Depends},
          ${misc:Depends}
 Description: GObject introspection data for Muffin
- Muffin is a small window manager, using GTK+ and Clutter to do
- everything.
+ Muffin is a small window manager performing compositing as well based on
+ GTK+ and Clutter and used in desktop environment such as Cinnamon. 
  .
- Muffin is the clutter-based evolution of Metacity, which, as the
- author says, is a "Boring window manager for the adult in you. Many
- window managers are like Marshmallow Froot Loops; Metacity is like
- Cheerios."
+ It is fairly extensible by the mean of plugins, providing new or customized
+ visual effects as well as a flexibility in the behavior of the window
+ manager.
  .
  This package contains the GObject introspection data which may be
  used to generate dynamic bindings.
@@ -135,13 +130,12 @@ Architecture: any
 Depends: libmuffin-1.0.6 (= ${binary:Version}),
          muffin (= ${binary:Version}),
          ${misc:Depends}
-Description: Debugging symbols files for the Muffin window manager
- Muffin is a small window manager, using GTK+ and Clutter to do
- everything.
+Description: lightweight window and compositing manager (debugging symbols)
+ Muffin is a small window manager performing compositing as well based on
+ GTK+ and Clutter and used in desktop environment such as Cinnamon. 
  .
- Muffin is the clutter-based evolution of Metacity, which, as the
- author says, is a "Boring window manager for the adult in you. Many
- window managers are like Marshmallow Froot Loops; Metacity is like
- Cheerios."
+ It is fairly extensible by the mean of plugins, providing new or customized
+ visual effects as well as a flexibility in the behavior of the window
+ manager.
  .
  This package contains the debugging symbols.
