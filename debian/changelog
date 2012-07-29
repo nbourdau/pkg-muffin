@@ -1,5 +1,5 @@
-muffin (1.0.6-1) UNRELEASED; urgency=low
+muffin (1.0.6-1) unstable; urgency=low
 
   * Initial release. (Closes: #661270)
 
- -- Nicolas Bourdaud <nicolas.bourdaud@gmail.com>  Fri, 27 Jul 2012 11:54:45 +0200
+ -- Nicolas Bourdaud <nicolas.bourdaud@gmail.com>  Sun, 29 Jul 2012 13:46:45 +0200
