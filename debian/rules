@@ -1,11 +1,18 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
 
 export DEB_LDFLAGS_MAINT_APPEND=-Wl,--as-needed
 
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+  NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+  MAKEFLAGS += -j$(NUMJOBS)
+endif
 
 %:
 	dh  $@ --with autoreconf
-
 
 override_dh_autoreconf:
 	dh_autoreconf --as-needed
