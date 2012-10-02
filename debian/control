@@ -2,6 +2,7 @@ Source: muffin
 Section: x11
 Priority: optional
 Maintainer: Nicolas Bourdaud <nicolas.bourdaud@gmail.com>
+Uploaders: Laszlo Boszormenyi (GCS) <gcs@debian.hu>
 Build-Depends: debhelper (>= 9),
                dh-autoreconf,
                intltool (>= 0.34.90),
