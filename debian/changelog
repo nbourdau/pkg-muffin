@@ -1,8 +1,11 @@
-muffin (1.1.2-1) UNRELEASED; urgency=low
+muffin (1.1.2-1) unstable; urgency=low
 
   * New upstream: muffin_1.1.2
+  * Update debian/watch: stop using redirector (Thanks: Bart Martens)
+  * Use priority extra and section misc: this reflects the change made by
+    ftp-master in the archives.
 
- -- Nicolas Bourdaud <nicolas.bourdaud@gmail.com>  Mon, 19 Nov 2012 23:16:38 +0100
+ -- Nicolas Bourdaud <nicolas.bourdaud@gmail.com>  Mon, 19 Nov 2012 23:28:01 +0100
 
 muffin (1.1.1-1) unstable; urgency=low
 
