@@ -1,6 +1,6 @@
 Source: muffin
-Section: x11
-Priority: optional
+Section: misc
+Priority: extra
 Maintainer: Nicolas Bourdaud <nicolas.bourdaud@gmail.com>
 Uploaders: Laszlo Boszormenyi (GCS) <gcs@debian.hu>
 Build-Depends: debhelper (>= 9),
@@ -77,7 +77,6 @@ Description: lightweight window and compositing manager (shared library)
  itself, and Cinnamon.
 
 Package: muffin-common
-Section: misc
 Architecture: all
 Depends: ${misc:Depends}
 Description: lightweight window and compositing manager (data files)
@@ -126,7 +125,6 @@ Description: GObject introspection data for Muffin
 
 Package: muffin-dbg
 Section: debug
-Priority: extra
 Architecture: any
 Depends: libmuffin0 (= ${binary:Version}),
          muffin (= ${binary:Version}),
