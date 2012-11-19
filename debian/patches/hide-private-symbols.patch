@@ -3212,7 +3212,7 @@ Last-Update: 2012-07-28
  meta_window_update_for_monitors_changed (MetaWindow *window)
  {
    const MetaMonitorInfo *old, *new;
-@@ -5238,7 +5238,7 @@
+@@ -5242,7 +5242,7 @@
                                      w, h);
  }
  
@@ -3221,7 +3221,7 @@ Last-Update: 2012-07-28
  meta_window_resize_with_gravity (MetaWindow *window,
                                   gboolean     user_op,
                                   int          w,
-@@ -5339,7 +5339,7 @@
+@@ -5343,7 +5343,7 @@
      meta_compositor_sync_window_geometry (window->display->compositor, window);
  }
  
@@ -3230,7 +3230,7 @@ Last-Update: 2012-07-28
  meta_window_get_position (MetaWindow  *window,
                            int         *x,
                            int         *y)
-@@ -5360,7 +5360,7 @@
+@@ -5364,7 +5364,7 @@
      }
  }
  
@@ -3239,7 +3239,7 @@ Last-Update: 2012-07-28
  meta_window_get_client_root_coords (MetaWindow    *window,
                                      MetaRectangle *rect)
  {
-@@ -5369,7 +5369,7 @@
+@@ -5373,7 +5373,7 @@
    rect->height = window->rect.height;
  }
  
@@ -3248,7 +3248,7 @@ Last-Update: 2012-07-28
  meta_window_get_gravity_position (MetaWindow  *window,
                                    int          gravity,
                                    int         *root_x,
-@@ -5453,7 +5453,7 @@
+@@ -5457,7 +5457,7 @@
      *root_y = y;
  }
  
@@ -3257,7 +3257,7 @@ Last-Update: 2012-07-28
  meta_window_get_geometry (MetaWindow  *window,
                            int         *x,
                            int         *y,
-@@ -5573,7 +5573,7 @@
+@@ -5577,7 +5577,7 @@
  }
  
  /* XXX META_EFFECT_FOCUS */
@@ -3266,7 +3266,7 @@ Last-Update: 2012-07-28
  meta_window_focus (MetaWindow  *window,
                     guint32      timestamp)
  {
-@@ -5810,7 +5810,7 @@
+@@ -5814,7 +5814,7 @@
                                   &stick);
  }
  
@@ -3275,7 +3275,7 @@ Last-Update: 2012-07-28
  meta_window_get_net_wm_desktop (MetaWindow *window)
  {
    if (window->on_all_workspaces)
-@@ -5848,7 +5848,7 @@
+@@ -5852,7 +5852,7 @@
    meta_error_trap_pop (window->display);
  }
  
@@ -3284,7 +3284,7 @@ Last-Update: 2012-07-28
  meta_window_set_current_workspace_hint (MetaWindow *window)
  {
    /* FIXME if on more than one workspace, we claim to be "sticky",
-@@ -5964,7 +5964,7 @@
+@@ -5968,7 +5968,7 @@
    meta_stack_lower (window->screen->stack, window);
  }
  
@@ -3293,7 +3293,7 @@ Last-Update: 2012-07-28
  meta_window_send_icccm_message (MetaWindow *window,
                                  Atom        atom,
                                  guint32     timestamp)
-@@ -6000,7 +6000,7 @@
+@@ -6004,7 +6004,7 @@
      meta_error_trap_pop (window->display);
  }
  
@@ -3302,7 +3302,7 @@ Last-Update: 2012-07-28
  meta_window_move_resize_request (MetaWindow *window,
                                   guint       value_mask,
                                   int         gravity,
-@@ -6165,7 +6165,7 @@
+@@ -6169,7 +6169,7 @@
    save_user_window_placement (window);
  }
  
@@ -3311,7 +3311,7 @@ Last-Update: 2012-07-28
  meta_window_configure_request (MetaWindow *window,
                                 XEvent     *event)
  {
-@@ -6249,7 +6249,7 @@
+@@ -6253,7 +6253,7 @@
    return TRUE;
  }
  
@@ -3320,7 +3320,7 @@ Last-Update: 2012-07-28
  meta_window_property_notify (MetaWindow *window,
                               XEvent     *event)
  {
-@@ -6311,7 +6311,7 @@
+@@ -6315,7 +6315,7 @@
  #define _NET_WM_MOVERESIZE_MOVE_KEYBOARD    10
  #define _NET_WM_MOVERESIZE_CANCEL           11
  
@@ -3329,7 +3329,7 @@ Last-Update: 2012-07-28
  meta_window_client_message (MetaWindow *window,
                              XEvent     *event)
  {
-@@ -6812,7 +6812,7 @@
+@@ -6816,7 +6816,7 @@
   * @window's ancestors will have its %attached_focus_window field
   * cleared if it is currently %focus_window.
   */
@@ -3338,7 +3338,7 @@ Last-Update: 2012-07-28
  meta_window_propagate_focus_appearance (MetaWindow *window,
                                          gboolean    focused)
  {
-@@ -6852,7 +6852,7 @@
+@@ -6856,7 +6856,7 @@
      }
  }
  
@@ -3347,7 +3347,7 @@ Last-Update: 2012-07-28
  meta_window_notify_focus (MetaWindow *window,
                            XEvent     *event)
  {
-@@ -7289,7 +7289,7 @@
+@@ -7293,7 +7293,7 @@
                  window->sm_client_id ? window->sm_client_id : "none");
  }
  
@@ -3356,7 +3356,7 @@ Last-Update: 2012-07-28
  meta_window_update_role (MetaWindow *window)
  {
    char *str;
-@@ -7312,7 +7312,7 @@
+@@ -7316,7 +7316,7 @@
                  window->desc, window->role ? window->role : "null");
  }
  
@@ -3365,7 +3365,7 @@ Last-Update: 2012-07-28
  meta_window_update_net_wm_type (MetaWindow *window)
  {
    int n_atoms;
-@@ -7391,7 +7391,7 @@
+@@ -7395,7 +7395,7 @@
      meta_ui_queue_frame_draw (window->screen->ui, window->frame->xwindow);
  }
  
@@ -3374,7 +3374,7 @@ Last-Update: 2012-07-28
  meta_window_update_icon_now (MetaWindow *window)
  {
    GdkPixbuf *icon;
-@@ -7474,7 +7474,7 @@
+@@ -7478,7 +7478,7 @@
    return FALSE;
  }
  
@@ -3383,7 +3383,7 @@ Last-Update: 2012-07-28
  meta_window_get_workspaces (MetaWindow *window)
  {
    if (window->on_all_workspaces)
-@@ -7673,7 +7673,7 @@
+@@ -7677,7 +7677,7 @@
      }
  }
  
@@ -3392,7 +3392,7 @@ Last-Update: 2012-07-28
  meta_window_recalc_window_type (MetaWindow *window)
  {
    recalc_window_type (window);
-@@ -7893,7 +7893,7 @@
+@@ -7897,7 +7897,7 @@
  #undef MAX_N_ACTIONS
  }
  
@@ -3401,7 +3401,7 @@ Last-Update: 2012-07-28
  meta_window_recalc_features (MetaWindow *window)
  {
    recalc_window_features (window);
-@@ -8273,7 +8273,7 @@
+@@ -8277,7 +8277,7 @@
    meta_ui_window_menu_free (menu);
  }
  
@@ -3410,7 +3410,7 @@ Last-Update: 2012-07-28
  meta_window_show_menu (MetaWindow *window,
                         int         root_x,
                         int         root_y,
-@@ -8408,7 +8408,7 @@
+@@ -8412,7 +8412,7 @@
    meta_ui_window_menu_popup (menu, root_x, root_y, button, timestamp);
  }
  
@@ -3419,7 +3419,7 @@ Last-Update: 2012-07-28
  meta_window_shove_titlebar_onscreen (MetaWindow *window)
  {
    MetaRectangle  outer_rect;
-@@ -8456,7 +8456,7 @@
+@@ -8460,7 +8460,7 @@
                             window->rect.height);
  }
  
@@ -3428,7 +3428,7 @@ Last-Update: 2012-07-28
  meta_window_titlebar_is_onscreen (MetaWindow *window)
  {
    MetaRectangle  titlebar_rect;
-@@ -9270,7 +9270,7 @@
+@@ -9274,7 +9274,7 @@
      }
  }
  
@@ -3437,7 +3437,7 @@ Last-Update: 2012-07-28
  meta_window_handle_mouse_grab_op_event (MetaWindow *window,
                                          XEvent     *event)
  {
-@@ -9405,7 +9405,7 @@
+@@ -9409,7 +9409,7 @@
      }
  }
  
@@ -3446,7 +3446,7 @@ Last-Update: 2012-07-28
  meta_window_set_gravity (MetaWindow *window,
                           int         gravity)
  {
-@@ -9456,7 +9456,7 @@
+@@ -9460,7 +9460,7 @@
                area->x, area->y, area->width, area->height);
  }
  
@@ -3455,7 +3455,7 @@ Last-Update: 2012-07-28
  meta_window_get_work_area_current_monitor (MetaWindow    *window,
                                             MetaRectangle *area)
  {
-@@ -9469,7 +9469,7 @@
+@@ -9473,7 +9473,7 @@
                                           area);
  }
  
@@ -3464,7 +3464,7 @@ Last-Update: 2012-07-28
  meta_window_get_work_area_for_monitor (MetaWindow    *window,
                                         int            which_monitor,
                                         MetaRectangle *area)
-@@ -9481,7 +9481,7 @@
+@@ -9485,7 +9485,7 @@
                           which_monitor);
  }
  
@@ -3473,7 +3473,7 @@ Last-Update: 2012-07-28
  meta_window_get_work_area_all_monitors (MetaWindow    *window,
                                          MetaRectangle *area)
  {
-@@ -9507,7 +9507,7 @@
+@@ -9511,7 +9511,7 @@
                window->desc, area->x, area->y, area->width, area->height);
  }
  
@@ -3482,7 +3482,7 @@ Last-Update: 2012-07-28
  meta_window_get_current_tile_area (MetaWindow    *window,
                                     MetaRectangle *tile_area)
  {
-@@ -9532,7 +9532,7 @@
+@@ -9536,7 +9536,7 @@
      tile_area->x += tile_area->width;
  }
  
@@ -3491,7 +3491,7 @@ Last-Update: 2012-07-28
  meta_window_same_application (MetaWindow *window,
                                MetaWindow *other_window)
  {
-@@ -9562,7 +9562,7 @@
+@@ -9566,7 +9566,7 @@
            (other_window->xwindow & ~resource_mask));
  }
  
@@ -3500,7 +3500,7 @@ Last-Update: 2012-07-28
  meta_window_refresh_resize_popup (MetaWindow *window)
  {
    if (window->display->grab_op == META_GRAB_OP_NONE)
-@@ -9848,7 +9848,7 @@
+@@ -9852,7 +9852,7 @@
    return TRUE;
  }
  
@@ -3509,7 +3509,7 @@ Last-Update: 2012-07-28
  meta_window_begin_grab_op (MetaWindow *window,
                             MetaGrabOp  op,
                             gboolean    frame_action,
-@@ -9871,7 +9871,7 @@
+@@ -9875,7 +9875,7 @@
                                x, y);
  }
  
@@ -3518,7 +3518,7 @@ Last-Update: 2012-07-28
  meta_window_update_keyboard_resize (MetaWindow *window,
                                      gboolean    update_cursor)
  {
-@@ -9895,7 +9895,7 @@
+@@ -9899,7 +9899,7 @@
      }
  }
  
@@ -3527,7 +3527,7 @@ Last-Update: 2012-07-28
  meta_window_update_keyboard_move (MetaWindow *window)
  {
    int x, y;
-@@ -9905,7 +9905,7 @@
+@@ -9909,7 +9909,7 @@
                       &x, &y);
  }
  
@@ -3536,7 +3536,7 @@ Last-Update: 2012-07-28
  meta_window_update_layer (MetaWindow *window)
  {
    MetaGroup *group;
-@@ -9962,7 +9962,7 @@
+@@ -9966,7 +9966,7 @@
      }
  }
  
@@ -3545,7 +3545,7 @@ Last-Update: 2012-07-28
  meta_window_stack_just_below (MetaWindow *window,
                                MetaWindow *below_this_one)
  {
-@@ -10006,7 +10006,7 @@
+@@ -10010,7 +10010,7 @@
    return window->net_wm_user_time;
  }
  
@@ -3554,7 +3554,7 @@ Last-Update: 2012-07-28
  meta_window_set_user_time (MetaWindow *window,
                             guint32     timestamp)
  {
-@@ -10762,7 +10762,7 @@
+@@ -10766,7 +10766,7 @@
    return window->tile_match;
  }
  
