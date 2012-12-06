@@ -4,6 +4,7 @@ muffin (1.1.2-1) unstable; urgency=low
   * Update debian/watch: stop using redirector (Thanks: Bart Martens)
   * Use priority extra and section misc: this reflects the change made by
     ftp-master in the archives.
+  * Move Debian package repository to Alioth 
 
  -- Nicolas Bourdaud <nicolas.bourdaud@gmail.com>  Mon, 19 Nov 2012 23:28:01 +0100
 
