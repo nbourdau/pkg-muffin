@@ -4,7 +4,7 @@ muffin (1.1.2-1) unstable; urgency=low
   * Update debian/watch: stop using redirector (Thanks: Bart Martens)
   * Move Debian package repository to Alioth 
 
- -- Nicolas Bourdaud <nicolas.bourdaud@gmail.com>  Mon, 19 Nov 2012 23:28:01 +0100
+ -- Nicolas Bourdaud <nicolas.bourdaud@gmail.com>  Tue, 11 Dec 2012 18:36:16 +0100
 
 muffin (1.1.1-1) unstable; urgency=low
 
